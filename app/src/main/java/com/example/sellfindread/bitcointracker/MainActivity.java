@@ -1,6 +1,7 @@
 package com.example.sellfindread.bitcointracker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -9,12 +10,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.example.sellfindread.bitcointracker.Adapter.CoinMainAdapter;
@@ -25,6 +31,7 @@ import com.example.sellfindread.bitcointracker.Model.CoinModel;
 import com.example.sellfindread.bitcointracker.Model.ExchangeModel;
 import com.example.sellfindread.bitcointracker.Model.Rates;
 import com.example.sellfindread.bitcointracker.Model.RatesRoot;
+import com.example.sellfindread.bitcointracker.NightModePref.NightModePref;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -56,15 +63,27 @@ public class MainActivity extends AppCompatActivity {
 
     ConStatus receiver;
 
+    NightModePref pref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        pref=new NightModePref(this);
+
+        if(pref.loadThemeState()){
+            setTheme(R.style.DarkTheme);
+        }else {
+            setTheme(R.style.AppTheme);
+        }
+
         setContentView(R.layout.activity_main);
 
         conStatus=checkConnection();
 
         receiver=new ConStatus();
         receiver.mainActivityHandler(this);
+
 
         networkReceiver();
 
@@ -311,5 +330,49 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem switchItem=menu.findItem(R.id.switchItem);
+        switchItem.setActionView(R.layout.theme_switch);
+
+        SwitchCompat compat=switchItem.getActionView().findViewById(R.id.darkThemeSwitch);
+
+        if(pref.loadThemeState()){
+            compat.setChecked(true);
+        }
+
+        compat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    pref.setThemeState(true);
+                    Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    pref.setThemeState(false);
+                    Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
+        return true;
+    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()){
+//            case R.id.switchItem :
+//                return true;
+//
+//            default: return super.onOptionsItemSelected(item);
+//        }
+//    }
 }

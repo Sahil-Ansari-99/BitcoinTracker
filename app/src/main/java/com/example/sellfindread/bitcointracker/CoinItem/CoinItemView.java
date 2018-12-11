@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.sellfindread.bitcointracker.MainActivity;
 import com.example.sellfindread.bitcointracker.Model.CoinModel;
+import com.example.sellfindread.bitcointracker.NightModePref.NightModePref;
 import com.example.sellfindread.bitcointracker.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -45,12 +46,22 @@ public class CoinItemView extends AppCompatActivity {
 
     public boolean isConnected;
 
+    NightModePref modePref;
+
     OkHttpClient client;
     Request request;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        modePref=new NightModePref(this);
+
+        if(modePref.loadThemeState()){
+            setTheme(R.style.DarkTheme);
+        }else{
+            setTheme(R.style.AppTheme);
+        }
         setContentView(R.layout.coin_item);
 
         imageView=(ImageView)findViewById(R.id.coinItemImage);
