@@ -148,13 +148,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static void verifyConnection(boolean res){
-        if(res){
-            Log.e("Connection Test", "Connected");
-        }else{
-            Log.e("Connection Test", "Disconnected");
-        }
-    }
+//    public static void verifyConnection(boolean res){
+//        if(res){
+//            Log.e("Connection Test", "Connected");
+//        }else{
+//            Log.e("Connection Test", "Disconnected");
+//        }
+//    }
 
     private void networkReceiver(){
         registerReceiver(receiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

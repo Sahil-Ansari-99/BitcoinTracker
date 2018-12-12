@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
 import com.example.sellfindread.bitcointracker.MainActivity;
 
-import static com.example.sellfindread.bitcointracker.MainActivity.verifyConnection;
 
 public class ConStatus extends BroadcastReceiver{
    MainActivity mainActivity=null;
@@ -29,7 +27,6 @@ public class ConStatus extends BroadcastReceiver{
             }else{
                 mainActivity.connectionResult(false);
                 Toast.makeText(context, "Disconnected", Toast.LENGTH_LONG).show();
-                verifyConnection(false);
             }
         }catch (Exception e){
             e.printStackTrace();
